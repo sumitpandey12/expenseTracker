@@ -14,11 +14,15 @@ exports.loginUser = (req, res) => {
   const { email, password } = req.body;
   User.findOne({ where: { email: email } })
     .then((result) => {
+      if (result == null) {
+        return res.status(404).send({
+          message: "User not found",
+        });
+      }
       if (result.dataValues.password == password) {
-        console.log("Logged In");
         return res.status(200).send(result);
       }
-      return res.send({
+      return res.status(401).send({
         message: "Password is incorrect",
       });
     })
