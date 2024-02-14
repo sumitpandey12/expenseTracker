@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gray-100 rounded-lg py-5">
+    <div
+      class="flex justify-center w-full h-full my-auto xl:gap-14 lg:justify-normal md:gap-5 draggable"
+    >
+      <div class="flex items-center justify-center w-full lg:p-12">
+        <div class="flex items-center xl:p-10">
+          <form
+            onsubmit="register()"
+            class="flex flex-col w-full h-full pb-6 text-center bg-gray-100 rounded-3xl"
+          >
+            <h3 class="mb-3 text-4xl font-extrabold text-gray-900">Login</h3>
+            <p class="mb-4 text-gray-700">Enter your email and password</p>
+            <div class="error-container hidden text-red-500 text-sm m-3"></div>
+            <div
+              class="success-container hidden text-green-500 text-sm m-3"
+            ></div>
+            <label for="email" class="mb-2 text-sm text-start text-gray-900"
+              >Email*</label
+            >
+            <input
+              id="email"
+              type="email"
+              placeholder="mail@loopple.com"
+              class="flex items-center w-full px-5 py-4 mr-2 text-sm font-medium outline-none focus:bg-gray-300 mb-7 placeholder:text-gray-700 bg-gray-200 text-gray-900 rounded-2xl"
+            />
+            <label for="password" class="mb-2 text-sm text-start text-gray-900"
+              >Password*</label
+            >
+            <input
+              id="password"
+              type="password"
+              placeholder="Enter a password"
+              class="flex items-center w-full px-5 py-4 mb-5 mr-2 text-sm font-medium outline-none focus:bg-gray-300 placeholder:text-gray-700 bg-gray-200 text-gray-900 rounded-2xl"
+            />
+
+            <button
+              type="submit"
+              class="w-full px-6 py-5 mb-5 text-sm font-bold leading-none text-white transition duration-300 md:w-96 rounded-2xl hover:bg-purple-700 focus:ring-4 bg-purple-600"
+            >
+              Login
+            </button>
+            <p class="text-sm leading-relaxed text-gray-900">
+              Not registered yet?
+              <a href="/sign_up.html" class="font-bold text-purple-600"
+                >SignUp.</a
+              >
+            </p>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.7/axios.min.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        console.log("DOM Loaded");
+      });
+
+      function register() {
+        event.preventDefault();
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+        axios
+          .post("http://localhost:8001/api/login", {
+            email: email,
+            password: password,
+          })
+          .then((result) => {
+            console.log(result);
+            if (result.status == 200) {
+              displaySuccess("Logged In");
+            } else {
+              //i have to show error in the form
+              const errorMessage = result.data.message; // Adjust based on your API's response
+              displayError(errorMessage);
+            }
+          })
+          .catch((err) => console.log(err));
+      }
+
+      function displayError(message) {
+        const errorContainer = document.querySelector(".error-container");
+        errorContainer.textContent = message;
+        errorContainer.classList.remove("hidden");
+      }
+
+      function displaySuccess(message) {
+        const successContainer = document.querySelector(".success-container");
+        successContainer.textContent = message;
+        successContainer.classList.remove("hidden");
+      }
+    </script>
+  </body>
+</html>
