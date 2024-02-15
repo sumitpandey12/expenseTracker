@@ -63,13 +63,12 @@
               category: category,
             };
 
-            // Save expense to local storage
-            let expenses = JSON.parse(localStorage.getItem("expenses")) || [];
-            expenses.push(expense);
-            localStorage.setItem("expenses", JSON.stringify(expenses));
+            let token = localStorage.getItem("token");
 
             axios
-              .post("http://localhost:8001/api/expense", expense)
+              .post("http://localhost:8001/expense", expense, {
+                headers: { Authorization: token },
+              })
               .then(function (response) {
                 displayExpenses();
               })
@@ -90,9 +89,11 @@
         // Display expenses from local storage
         function displayExpenses() {
           expensesList.innerHTML = "";
-
+          var token = localStorage.getItem("token");
           axios
-            .get("http://localhost:8001/api/expense")
+            .get("http://localhost:8001/expense", {
+              headers: { Authorization: token },
+            })
             .then(function (response) {
               let expenses = response.data;
               expenses.forEach(function (expense, index) {
@@ -113,12 +114,18 @@
 
         // Delete expense
         window.deleteExpense = function (index) {
+          let token = localStorage.getItem("token");
           axios
-            .get("http://localhost:8001/api/expense")
+            .get("http://localhost:8001/expense", {
+              headers: { Authorization: token },
+            })
             .then(function (response) {
               let expense = response.data[index];
               return axios.delete(
-                "http://localhost:8001/api/expense/" + expense.id
+                "http://localhost:8001/expense/" + expense.id,
+                {
+                  headers: { Authorization: token },
+                }
               );
             })
             .then((response) => {
@@ -131,20 +138,23 @@
 
         // Edit expense
         window.editExpense = function (index) {
+          let token = localStorage.getItem("token");
           axios
-            .get("http://localhost:8001/api/expense")
+            .get("http://localhost:8001/expense", {
+              headers: { Authorization: token },
+            })
             .then(function (response) {
               let expense = response.data[index];
               document.getElementById("amount").value = expense.amount;
               document.getElementById("description").value =
                 expense.description;
               document.getElementById("category").value = expense.category;
-
-              expenses.splice(index, 1);
-              localStorage.setItem("expenses", JSON.stringify(expenses));
-
+              let token = localStorage.getItem("token");
               return axios.delete(
-                "http://localhost:8001/api/expense/" + expense.id
+                "http://localhost:8001/expense/" + expense.id,
+                {
+                  headers: { Authorization: token },
+                }
               );
             })
             .then((response) => {
