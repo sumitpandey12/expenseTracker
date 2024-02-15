@@ -11,6 +11,7 @@ require("dotenv").config();
 
 const userRouter = require("./routes/user");
 const expenseRouter = require("./routes/expense");
+const paymentRouter = require("./routes/payment");
 
 //Middlewares
 app.use(cors());
@@ -20,6 +21,7 @@ app.use(cookieParser());
 //Routes
 app.use("/user", userRouter);
 app.use("/expense", expenseRouter);
+app.use("/payment", paymentRouter);
 
 //relations
 
