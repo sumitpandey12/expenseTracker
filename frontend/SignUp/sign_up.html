@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Login</title>
+    <title>Sign Up</title>
     <script src="https://cdn.tailwindcss.com"></script>
   </head>
   <body class="bg-gray-100 rounded-lg py-5">
@@ -16,12 +16,19 @@
             onsubmit="register()"
             class="flex flex-col w-full h-full pb-6 text-center bg-gray-100 rounded-3xl"
           >
-            <h3 class="mb-3 text-4xl font-extrabold text-gray-900">Login</h3>
+            <h3 class="mb-3 text-4xl font-extrabold text-gray-900">Sign Up</h3>
             <p class="mb-4 text-gray-700">Enter your email and password</p>
-            <div class="error-container hidden text-red-500 text-sm m-3"></div>
-            <div
-              class="success-container hidden text-green-500 text-sm m-3"
-            ></div>
+
+            <label for="name" class="mb-2 text-sm text-start text-gray-900"
+              >Name*</label
+            >
+            <input
+              id="name"
+              type="text"
+              placeholder="Sumit Pandey"
+              class="flex items-center w-full px-5 py-4 mr-2 text-sm font-medium outline-none focus:bg-gray-300 mb-7 placeholder:text-gray-700 bg-gray-200 text-gray-900 rounded-2xl"
+            />
+
             <label for="email" class="mb-2 text-sm text-start text-gray-900"
               >Email*</label
             >
@@ -45,12 +52,12 @@
               type="submit"
               class="w-full px-6 py-5 mb-5 text-sm font-bold leading-none text-white transition duration-300 md:w-96 rounded-2xl hover:bg-purple-700 focus:ring-4 bg-purple-600"
             >
-              Login
+              Sign Up
             </button>
             <p class="text-sm leading-relaxed text-gray-900">
-              Not registered yet?
-              <a href="/sign_up.html" class="font-bold text-purple-600"
-                >SignUp.</a
+              Already registered?
+              <a href="../Login//login.html" class="font-bold text-purple-600"
+                >Login.</a
               >
             </p>
           </form>
@@ -66,38 +73,29 @@
 
       function register() {
         event.preventDefault();
+        const name = document.getElementById("name").value;
         const email = document.getElementById("email").value;
         const password = document.getElementById("password").value;
+
         axios
-          .post("http://localhost:8001/user/login", {
+          .post("http://localhost:8001/user/register", {
+            name: name,
             email: email,
             password: password,
           })
           .then((result) => {
+            //redirect to login page
             console.log(result);
             if (result.status == 200) {
               console.log(result.data);
-              displaySuccess(result.data.message);
               localStorage.setItem("token", result.data.token);
               window.location.replace("http://127.0.0.1:5500/index.html");
             } else {
               const errorMessage = result.message;
-              displayError(errorMessage);
+              console.log(errorMessage);
             }
           })
           .catch((err) => console.log(err));
-      }
-
-      function displayError(message) {
-        const errorContainer = document.querySelector(".error-container");
-        errorContainer.textContent = message;
-        errorContainer.classList.remove("hidden");
-      }
-
-      function displaySuccess(message) {
-        const successContainer = document.querySelector(".success-container");
-        successContainer.textContent = message;
-        successContainer.classList.remove("hidden");
       }
     </script>
   </body>

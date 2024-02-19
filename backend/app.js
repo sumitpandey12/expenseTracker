@@ -27,9 +27,13 @@ app.use("/payment", paymentRouter);
 
 const User = require("./models/user");
 const Expense = require("./models/expense");
+const Order = require("./models/order");
 
 User.hasMany(Expense);
 Expense.belongsTo(User);
+
+User.hasMany(Order);
+Order.belongsTo(User);
 
 sequelize
   .sync({ force: false })
