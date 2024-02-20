@@ -29,7 +29,7 @@ exports.sendOTP = async (req, res) => {
       sender,
       to: [
         {
-          email: "sumitpandeyjnv@gmail.com",
+          email: email,
           name: "Sumit Pandey",
         },
       ],
