@@ -9,6 +9,6 @@ const Authenticate = require("../middleware/auth");
 
 router.get("/", Authenticate, exprenseController.getExpenses);
 router.post("/", Authenticate, exprenseController.postExpense);
-router.delete("/:id", exprenseController.deleteExpense);
+router.delete("/:id", Authenticate, exprenseController.deleteExpense);
 
 module.exports = router;
