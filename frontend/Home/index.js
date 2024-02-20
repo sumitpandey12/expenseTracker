@@ -23,10 +23,7 @@ document.getElementById("buy-button").onclick = async function (e) {
           headers: { Authorization: token },
         }
       );
-      const premiumUser = document.getElementById("premiumUser");
-      const buyButton = document.getElementById("buy-button");
-      premiumUser.style.display = "block";
-      buyButton.style.display = "none";
+      showPremiumUser();
       localStorage.setItem(
         "token",
         JSON.stringify({
@@ -56,19 +53,46 @@ document.getElementById("buy-button").onclick = async function (e) {
   razorpayObject.open();
 };
 
+function showPremiumUser() {
+  const premiumUser = document.getElementById("premiumUser");
+  const buyButton = document.getElementById("buy-button");
+  const buyContainer = document.getElementsByClassName("buy-container")[0];
+  premiumUser.style.display = "block";
+  buyButton.style.display = "none";
+
+  var button = document.createElement("button");
+  button.textContent = "Show Leaderboard";
+  button.className = "btnShowLeaderboard";
+  buyContainer.appendChild(button);
+  button.addEventListener("click", () => {
+    axios
+      .post("http://localhost:8001/premium/show-leaderboard", null, {
+        headers: {
+          Authorization: JSON.parse(localStorage.getItem("token")).token,
+        },
+      })
+      .then(function (response) {
+        const premiumList = document.getElementsByClassName("list-premium")[0];
+        response.data.forEach((data) => {
+          const li = document.createElement("li");
+          li.innerHTML = `Name ${data.name} : Total Expense ${data.total_cost}`;
+          premiumList.appendChild(li);
+        });
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  });
+}
+
 document.addEventListener("DOMContentLoaded", function () {
   const expenseForm = document.getElementById("expenseForm");
   const expensesList = document.getElementById("expenses");
-  const premiumUser = document.getElementById("premiumUser");
-  const buyButton = document.getElementById("buy-button");
+
   const storedData = JSON.parse(localStorage.getItem("token"));
 
   if (storedData.ispremium) {
-    premiumUser.style.display = "block";
-    buyButton.style.display = "none";
-  } else {
-    premiumUser.style.display = "none";
-    buyButton.style.display = "block";
+    showPremiumUser();
   }
   expenseForm.addEventListener("submit", function (event) {
     event.preventDefault();
