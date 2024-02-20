@@ -13,6 +13,7 @@ const userRouter = require("./routes/user");
 const expenseRouter = require("./routes/expense");
 const paymentRouter = require("./routes/payment");
 const premiumRouter = require("./routes/premium");
+const passwordRouter = require("./routes/password");
 
 //Middlewares
 app.use(cors());
@@ -24,6 +25,7 @@ app.use("/user", userRouter);
 app.use("/expense", expenseRouter);
 app.use("/payment", paymentRouter);
 app.use("/premium", premiumRouter);
+app.use("/password", passwordRouter);
 
 //relations
 
