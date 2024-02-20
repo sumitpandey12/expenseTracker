@@ -7,7 +7,7 @@ const exprenseController = require("../controllers/expense");
 //middlewares
 const Authenticate = require("../middleware/auth");
 
-router.get("/", Authenticate, exprenseController.getExpense);
+router.get("/", Authenticate, exprenseController.getExpenses);
 router.post("/", Authenticate, exprenseController.postExpense);
 router.delete("/:id", exprenseController.deleteExpense);
 
