@@ -88,7 +88,7 @@ function showPremiumUser() {
 document.addEventListener("DOMContentLoaded", function () {
   const expenseForm = document.getElementById("expenseForm");
   const expensesList = document.getElementById("expenses");
-
+  const paginationCount = document.getElementById("paginationCount");
   const storedData = JSON.parse(localStorage.getItem("token"));
 
   if (storedData.ispremium) {
@@ -113,7 +113,7 @@ document.addEventListener("DOMContentLoaded", function () {
           headers: { Authorization: storedData.token },
         })
         .then(function (response) {
-          displayExpenses(1);
+          displayExpenses(1, paginationCount.value);
         })
         .catch(function (error) {
           console.log(error);
@@ -123,21 +123,28 @@ document.addEventListener("DOMContentLoaded", function () {
       expenseForm.reset();
 
       // Display expenses
-      displayExpenses(1);
+      displayExpenses(1, paginationCount.value);
     } else {
       alert("Please fill in all fields.");
     }
   });
 
   // Display expenses
-  function displayExpenses(page) {
+  function displayExpenses(page, count) {
     expensesList.innerHTML = "";
     const pagenationDiv = document.getElementById("paginationDiv");
+
     pagenationDiv.innerHTML = "";
     axios
-      .get("http://localhost:8001/expense?page=" + page, {
-        headers: { Authorization: storedData.token },
-      })
+      .get(
+        "http://localhost:8001/expense?page=" +
+          page +
+          "&paginationCount=" +
+          count,
+        {
+          headers: { Authorization: storedData.token },
+        }
+      )
       .then(function (response) {
         let data = response.data;
 
@@ -146,7 +153,7 @@ document.addEventListener("DOMContentLoaded", function () {
           button.textContent = data.previousPage;
           button.className = "m-1";
           button.onclick = function () {
-            displayExpenses(data.previousPage);
+            displayExpenses(data.previousPage, paginationCount.value);
           };
           pagenationDiv.appendChild(button);
         }
@@ -160,7 +167,7 @@ document.addEventListener("DOMContentLoaded", function () {
           button.textContent = data.nextPage;
           button.className = "m-1";
           button.onclick = function () {
-            displayExpenses(data.nextPage);
+            displayExpenses(data.nextPage, paginationCount.value);
           };
           pagenationDiv.appendChild(button);
         }
@@ -193,7 +200,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
       })
       .then((response) => {
-        displayExpenses(1);
+        displayExpenses(1, paginationCount.value);
       })
       .catch(function (error) {
         console.log(error);
@@ -224,7 +231,12 @@ document.addEventListener("DOMContentLoaded", function () {
   };
 
   // Initial display
-  displayExpenses(1);
+  paginationCount.addEventListener("change", (e) => {
+    const selectedValue = e.target.value;
+    console.log(selectedValue);
+    displayExpenses(1, selectedValue);
+  });
+  displayExpenses(1, paginationCount.value);
 });
 
 document.getElementById("btnDownload").onclick = async function (e) {

@@ -42,7 +42,9 @@ exports.postExpense = async (req, res) => {
 exports.getExpenses = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
-    const limit = 2;
+    const paginationCount = parseInt(req.query.paginationCount) || 2;
+    console.log(paginationCount);
+    const limit = paginationCount;
 
     const { count, rows: expenses } = await Expense.findAndCountAll({
       where: { userId: req.user.id },
