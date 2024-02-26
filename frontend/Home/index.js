@@ -113,7 +113,7 @@ document.addEventListener("DOMContentLoaded", function () {
           headers: { Authorization: storedData.token },
         })
         .then(function (response) {
-          displayExpenses(1, paginationCount.value);
+          displayExpenses(1);
         })
         .catch(function (error) {
           console.log(error);
@@ -123,16 +123,22 @@ document.addEventListener("DOMContentLoaded", function () {
       expenseForm.reset();
 
       // Display expenses
-      displayExpenses(1, paginationCount.value);
+      displayExpenses(1);
     } else {
       alert("Please fill in all fields.");
     }
   });
 
   // Display expenses
-  function displayExpenses(page, count) {
+  function displayExpenses(page) {
     expensesList.innerHTML = "";
     const pagenationDiv = document.getElementById("paginationDiv");
+    const paginationCount = document.getElementById("paginationCount");
+    pagenationDiv.innerHTML = "";
+    const count = localStorage.getItem("paginationCount");
+    paginationCount.value = count;
+
+    console.log(count);
 
     pagenationDiv.innerHTML = "";
     axios
@@ -153,7 +159,7 @@ document.addEventListener("DOMContentLoaded", function () {
           button.textContent = data.previousPage;
           button.className = "m-1";
           button.onclick = function () {
-            displayExpenses(data.previousPage, paginationCount.value);
+            displayExpenses(data.previousPage);
           };
           pagenationDiv.appendChild(button);
         }
@@ -167,7 +173,7 @@ document.addEventListener("DOMContentLoaded", function () {
           button.textContent = data.nextPage;
           button.className = "m-1";
           button.onclick = function () {
-            displayExpenses(data.nextPage, paginationCount.value);
+            displayExpenses(data.nextPage);
           };
           pagenationDiv.appendChild(button);
         }
@@ -200,7 +206,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
       })
       .then((response) => {
-        displayExpenses(1, paginationCount.value);
+        displayExpenses(1);
       })
       .catch(function (error) {
         console.log(error);
@@ -234,9 +240,10 @@ document.addEventListener("DOMContentLoaded", function () {
   paginationCount.addEventListener("change", (e) => {
     const selectedValue = e.target.value;
     console.log(selectedValue);
-    displayExpenses(1, selectedValue);
+    localStorage.setItem("paginationCount", selectedValue);
+    displayExpenses(1);
   });
-  displayExpenses(1, paginationCount.value);
+  displayExpenses(1);
 });
 
 document.getElementById("btnDownload").onclick = async function (e) {
