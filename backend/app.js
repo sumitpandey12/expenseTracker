@@ -2,6 +2,8 @@ const express = require("express");
 
 const fs = require("fs");
 const path = require("path");
+let cors = require("cors");
+require("dotenv").config();
 
 const sequelize = require("./utils/database");
 const cookieParser = require("cookie-parser");
@@ -11,9 +13,6 @@ const morgan = require("morgan");
 var app = express();
 
 const PORT = 8001;
-
-let cors = require("cors");
-require("dotenv").config();
 
 const userRouter = require("./routes/user");
 const expenseRouter = require("./routes/expense");
