@@ -59,7 +59,7 @@ exports.sendOTP = async (req, res) => {
               },
             ],
             subject: "OTP Verification",
-            textContent: `This is link for resenting your password : http://localhost:3000/password/resetpassword/${id}`,
+            textContent: `This is link for resenting your password : http://13.233.28.177:3000/password/resetpassword/${id}`,
           })
           .then((result) => {
             res.status(200).json(result);

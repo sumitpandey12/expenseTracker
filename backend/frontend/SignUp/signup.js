@@ -10,7 +10,7 @@ function register() {
   const password = document.getElementById("password").value;
 
   axios
-    .post("http://localhost:3000/user/register", {
+    .post("http://13.233.28.177:3000/user/register", {
       name: name,
       email: email,
       password: password,
@@ -21,7 +21,7 @@ function register() {
       if (result.status == 200) {
         console.log(result.data);
         localStorage.setItem("token", result.data.token);
-        window.location.href = "http://localhost:3000/Home/index.html";
+        window.location.href = "http://13.233.28.177:3000/Home/index.html";
       } else {
         const errorMessage = result.message;
         console.log(errorMessage);
