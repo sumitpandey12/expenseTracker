@@ -4,7 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sign Up</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
   </head>
   <body class="bg-gray-100 rounded-lg py-5">
     <div
@@ -13,7 +16,6 @@
       <div class="flex items-center justify-center w-full lg:p-12">
         <div class="flex items-center xl:p-10">
           <form
-            onsubmit="register()"
             class="flex flex-col w-full h-full pb-6 text-center bg-gray-100 rounded-3xl"
           >
             <h3 class="mb-3 text-4xl font-extrabold text-gray-900">Sign Up</h3>
@@ -66,39 +68,6 @@
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.7/axios.min.js"></script>
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        console.log("DOM Loaded");
-      });
-
-      function register() {
-        event.preventDefault();
-        const name = document.getElementById("name").value;
-        const email = document.getElementById("email").value;
-        const password = document.getElementById("password").value;
-
-        axios
-          .post("http://localhost:8001/user/register", {
-            name: name,
-            email: email,
-            password: password,
-          })
-          .then((result) => {
-            //redirect to login page
-            console.log(result);
-            if (result.status == 200) {
-              console.log(result.data);
-              localStorage.setItem("token", result.data.token);
-              window.location.replace(
-                "http://127.0.0.1:5500/frontend/Login/login.html"
-              );
-            } else {
-              const errorMessage = result.message;
-              console.log(errorMessage);
-            }
-          })
-          .catch((err) => console.log(err));
-      }
-    </script>
+    <script src="./signup.js"></script>
   </body>
 </html>

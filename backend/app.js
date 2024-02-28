@@ -12,7 +12,7 @@ const morgan = require("morgan");
 
 var app = express();
 
-const PORT = 8001;
+const PORT = 3000;
 
 const userRouter = require("./routes/user");
 const expenseRouter = require("./routes/expense");
@@ -32,6 +32,25 @@ app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 app.use(helmet());
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: ["'self'", "data:", "blob:"],
+
+      fontSrc: ["'self'", "https:", "data:"],
+
+      scriptSrc: ["'self'", "unsafe-inline"],
+
+      scriptSrc: ["'self'", "https://*.cloudflare.com"],
+
+      scriptSrcElem: ["'self'", "https:", "https://*.cloudflare.com"],
+
+      styleSrc: ["'self'", "https:", "unsafe-inline"],
+
+      connectSrc: ["'self'", "data", "https://*.cloudflare.com"],
+    },
+  })
+);
 // app.use(morgan("common", { stream: accessLogStream }));
 
 //Routes
@@ -40,6 +59,12 @@ app.use("/expense", expenseRouter);
 app.use("/payment", paymentRouter);
 app.use("/premium", premiumRouter);
 app.use("/password", passwordRouter);
+
+app.use((req, res) => {
+  const urlWithoutQuery = req.url.split("?")[0];
+  console.log(urlWithoutQuery);
+  res.sendFile(path.join(__dirname, `frontend/${urlWithoutQuery}`));
+});
 
 //relations
 

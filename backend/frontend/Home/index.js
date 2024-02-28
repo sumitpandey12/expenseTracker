@@ -2,7 +2,7 @@ document.getElementById("buy-button").onclick = async function (e) {
   e.preventDefault();
   const token = JSON.parse(localStorage.getItem("token")).token;
   const result = await axios.post(
-    "http://localhost:8001/payment/createOrder",
+    "http://localhost:3000/payment/createOrder",
     null,
     {
       headers: { Authorization: token },
@@ -13,7 +13,7 @@ document.getElementById("buy-button").onclick = async function (e) {
     order_id: result.data.order.id,
     handler: async function (response) {
       await axios.post(
-        "http://localhost:8001/payment/updateOrder",
+        "http://localhost:3000/payment/updateOrder",
         {
           order_id: result.data.order.id,
           payment_id: response.razorpay_payment_id,
@@ -38,7 +38,7 @@ document.getElementById("buy-button").onclick = async function (e) {
   var razorpayObject = new Razorpay(options);
   razorpayObject.on("payment.failed", async function (response) {
     await axios.post(
-      "http://localhost:8001/payment/updateOrder",
+      "http://localhost:3000/payment/updateOrder",
       {
         order_id: result.data.order.id,
         payment_id: response.razorpay_payment_id,
@@ -66,7 +66,7 @@ function showPremiumUser() {
   buyContainer.appendChild(button);
   button.addEventListener("click", () => {
     axios
-      .post("http://localhost:8001/premium/show-leaderboard", null, {
+      .post("http://localhost:3000/premium/show-leaderboard", null, {
         headers: {
           Authorization: JSON.parse(localStorage.getItem("token")).token,
         },
@@ -109,7 +109,7 @@ document.addEventListener("DOMContentLoaded", function () {
       };
 
       axios
-        .post("http://localhost:8001/expense", expense, {
+        .post("http://localhost:3000/expense", expense, {
           headers: { Authorization: storedData.token },
         })
         .then(function (response) {
@@ -143,7 +143,7 @@ document.addEventListener("DOMContentLoaded", function () {
     pagenationDiv.innerHTML = "";
     axios
       .get(
-        "http://localhost:8001/expense?page=" +
+        "http://localhost:3000/expense?page=" +
           page +
           "&paginationCount=" +
           count,
@@ -180,11 +180,17 @@ document.addEventListener("DOMContentLoaded", function () {
         data.expenses.forEach(function (expense, index) {
           const li = document.createElement("li");
           li.className = "list-group-item";
-          li.innerHTML = `
-                  <span>${expense.amount} - ${expense.description} (${expense.category})</span>
-                  <button type="button" class="btn btn-danger btn-sm float-right" onclick="deleteExpense(${index})">Delete</button>
-                  <button type="button" class="btn btn-primary btn-sm float-right mr-2" onclick="editExpense(${index})">Edit</button>
-                `;
+          const deleteButton = document.createElement("button");
+          deleteButton.className = "deleteButton";
+          deleteButton.textContent = "Delete";
+          li.innerHTML = `<span>${expense.amount} - ${expense.description} (${expense.category})</span>`;
+          //         <button type="button" class="btn btn-danger btn-sm float-right">Delete</button>
+          //         <button type="button" class="btn btn-primary btn-sm float-right mr-2" onclick="editExpense(${index})">Edit</button>
+          //       `;
+          li.append(deleteButton);
+          deleteButton.addEventListener("click", (e) => {
+            deleteExpense(index);
+          });
           expensesList.appendChild(li);
         });
       })
@@ -193,30 +199,33 @@ document.addEventListener("DOMContentLoaded", function () {
       });
   }
 
-  // Delete expense
   window.deleteExpense = function (index) {
-    axios
-      .get("http://localhost:8001/expense", {
-        headers: { Authorization: storedData.token },
-      })
-      .then(function (response) {
-        let expense = response.data[index];
-        return axios.delete("http://localhost:8001/expense/" + expense.id, {
+    try {
+      axios
+        .get("http://localhost:3000/expense", {
           headers: { Authorization: storedData.token },
+        })
+        .then(function (response) {
+          let expense = response.data.expenses[index];
+          console.log(response);
+          return axios.delete("http://localhost:3000/expense/" + expense.id, {
+            headers: { Authorization: storedData.token },
+          });
+        })
+        .then((response) => {
+          displayExpenses(1);
+        })
+        .catch(function (error) {
+          console.log(error);
         });
-      })
-      .then((response) => {
-        displayExpenses(1);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
-  // Edit expense
   window.editExpense = function (index) {
     axios
-      .get("http://localhost:8001/expense", {
+      .get("http://localhost:3000/expense", {
         headers: { Authorization: storedData.token },
       })
       .then(function (response) {
@@ -224,7 +233,7 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("amount").value = expense.amount;
         document.getElementById("description").value = expense.description;
         document.getElementById("category").value = expense.category;
-        return axios.delete("http://localhost:8001/expense/" + expense.id, {
+        return axios.delete("http://localhost:3000/expense/" + expense.id, {
           headers: { Authorization: storedData.token },
         });
       })
@@ -249,7 +258,7 @@ document.addEventListener("DOMContentLoaded", function () {
 document.getElementById("btnDownload").onclick = async function (e) {
   const storedData = JSON.parse(localStorage.getItem("token"));
   axios
-    .get("http://localhost:8001/expense/download", {
+    .get("http://localhost:3000/expense/download", {
       headers: { Authorization: storedData.token },
     })
     .then((response) => {
