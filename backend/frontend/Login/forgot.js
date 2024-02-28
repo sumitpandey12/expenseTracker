@@ -2,7 +2,7 @@ document.getElementById("forgotForm").addEventListener("submit", (e) => {
   e.preventDefault();
   const email = document.getElementById("email").value;
   axios
-    .post("http://localhost:3000/password/forgotpassword", {
+    .post("http://13.233.28.177:3000/password/forgotpassword", {
       email,
     })
     .then((result) => {

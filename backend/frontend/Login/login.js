@@ -8,7 +8,7 @@ function register(event) {
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
   axios
-    .post("http://localhost:3000/user/login", {
+    .post("http://13.233.28.177:3000/user/login", {
       email: email,
       password: password,
     })
@@ -25,8 +25,8 @@ function register(event) {
           })
         );
 
-        // window.location.replace("http://localhost:3000/Home/index.html");
-        window.location.href = "http://localhost:3000/Home/index.html";
+        // window.location.replace("http://13.233.28.177:3000/Home/index.html");
+        window.location.href = "http://13.233.28.177:3000/Home/index.html";
       } else {
         const errorMessage = result.message;
         displayError(errorMessage);

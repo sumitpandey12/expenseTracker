@@ -2,7 +2,7 @@ document.getElementById("buy-button").onclick = async function (e) {
   e.preventDefault();
   const token = JSON.parse(localStorage.getItem("token")).token;
   const result = await axios.post(
-    "http://localhost:3000/payment/createOrder",
+    "http://13.233.28.177:3000/payment/createOrder",
     null,
     {
       headers: { Authorization: token },
@@ -13,7 +13,7 @@ document.getElementById("buy-button").onclick = async function (e) {
     order_id: result.data.order.id,
     handler: async function (response) {
       await axios.post(
-        "http://localhost:3000/payment/updateOrder",
+        "http://13.233.28.177:3000/payment/updateOrder",
         {
           order_id: result.data.order.id,
           payment_id: response.razorpay_payment_id,
@@ -38,7 +38,7 @@ document.getElementById("buy-button").onclick = async function (e) {
   var razorpayObject = new Razorpay(options);
   razorpayObject.on("payment.failed", async function (response) {
     await axios.post(
-      "http://localhost:3000/payment/updateOrder",
+      "http://13.233.28.177:3000/payment/updateOrder",
       {
         order_id: result.data.order.id,
         payment_id: response.razorpay_payment_id,
@@ -66,7 +66,7 @@ function showPremiumUser() {
   buyContainer.appendChild(button);
   button.addEventListener("click", () => {
     axios
-      .post("http://localhost:3000/premium/show-leaderboard", null, {
+      .post("http://13.233.28.177:3000/premium/show-leaderboard", null, {
         headers: {
           Authorization: JSON.parse(localStorage.getItem("token")).token,
         },
@@ -109,7 +109,7 @@ document.addEventListener("DOMContentLoaded", function () {
       };
 
       axios
-        .post("http://localhost:3000/expense", expense, {
+        .post("http://13.233.28.177:3000/expense", expense, {
           headers: { Authorization: storedData.token },
         })
         .then(function (response) {
@@ -143,7 +143,7 @@ document.addEventListener("DOMContentLoaded", function () {
     pagenationDiv.innerHTML = "";
     axios
       .get(
-        "http://localhost:3000/expense?page=" +
+        "http://13.233.28.177:3000/expense?page=" +
           page +
           "&paginationCount=" +
           count,
@@ -202,15 +202,18 @@ document.addEventListener("DOMContentLoaded", function () {
   window.deleteExpense = function (index) {
     try {
       axios
-        .get("http://localhost:3000/expense", {
+        .get("http://13.233.28.177:3000/expense", {
           headers: { Authorization: storedData.token },
         })
         .then(function (response) {
           let expense = response.data.expenses[index];
           console.log(response);
-          return axios.delete("http://localhost:3000/expense/" + expense.id, {
-            headers: { Authorization: storedData.token },
-          });
+          return axios.delete(
+            "http://13.233.28.177:3000/expense/" + expense.id,
+            {
+              headers: { Authorization: storedData.token },
+            }
+          );
         })
         .then((response) => {
           displayExpenses(1);
@@ -225,7 +228,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   window.editExpense = function (index) {
     axios
-      .get("http://localhost:3000/expense", {
+      .get("http://13.233.28.177:3000/expense", {
         headers: { Authorization: storedData.token },
       })
       .then(function (response) {
@@ -233,7 +236,7 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("amount").value = expense.amount;
         document.getElementById("description").value = expense.description;
         document.getElementById("category").value = expense.category;
-        return axios.delete("http://localhost:3000/expense/" + expense.id, {
+        return axios.delete("http://13.233.28.177:3000/expense/" + expense.id, {
           headers: { Authorization: storedData.token },
         });
       })
@@ -258,7 +261,7 @@ document.addEventListener("DOMContentLoaded", function () {
 document.getElementById("btnDownload").onclick = async function (e) {
   const storedData = JSON.parse(localStorage.getItem("token"));
   axios
-    .get("http://localhost:3000/expense/download", {
+    .get("http://13.233.28.177:3000/expense/download", {
       headers: { Authorization: storedData.token },
     })
     .then((response) => {
